@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  leadcalc-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: leadcalc-ai
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=file:/app/prisma/dev.db
+      - NEXT_PUBLIC_APP_URL=http://localhost:3000
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-}
+      - STRIPE_PUBLISHABLE_KEY=${STRIPE_PUBLISHABLE_KEY:-}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-}
+    volumes:
+      - leadcalc_data:/app/prisma
+
+volumes:
+  leadcalc_data:
