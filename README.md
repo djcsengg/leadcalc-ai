@@ -1,13 +1,13 @@
 # LeadCalc AI (Product #1)
 
 > **Embeddable, AI-Powered Interactive Calculator & Lead Magnet Generator**  
-> *Developed by Autonomous Technology Solutions (ATS) — Phase 2 MVP Implementation ([ATS-4](/ATS/issues/ATS-4))*
+> *Developed by Autonomous Technology Solutions (ATS) — Phases 1–3 Complete ([ATS-3](/ATS/issues/ATS-3), [ATS-4](/ATS/issues/ATS-4), [ATS-7](/ATS/issues/ATS-7))*
 
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?logo=typescript)](https://www.typescriptlang.org/)
 [![Prisma](https://img.shields.io/badge/Prisma-5.22-darkblue?logo=prisma)](https://www.prisma.io/)
 [![Tailwind CSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8?logo=tailwind-css)](https://tailwindcss.com/)
-[![Tests](https://img.shields.io/badge/Tests-21%2F21%20Passing-brightgreen)](https://vitest.dev/)
+[![Tests](https://img.shields.io/badge/Tests-32%2F32%20Passing-brightgreen)](https://vitest.dev/)
 
 ---
 
@@ -17,9 +17,10 @@
 
 ### Key Highlights
 - **30-Second AI Generation:** Describe your business model or formula in plain English; Google Gemini automatically generates reactive input sliders, numeric fields, safe math formulas, and styled output cards.
-- **Viral Growth Flywheel:** Free tier includes a discreet "Powered by LeadCalc AI" badge that links to product signup.
+- **Programmatic SEO Directory:** 12 curated, high-intent calculators across ROI, SaaS economics, loans/finance, and freelance rate estimators (`/calculators` and `/c/[slug]`), paired with automated XML sitemap (`/sitemap.xml`) and AI-crawler optimized robots control (`/robots.txt`).
+- **Viral Growth Flywheel:** Free tier includes a discreet "⚡ Powered by LeadCalc AI" badge that links to product signup with full UTM attribution tracking.
 - **Self-Serve Stripe Monetization:** Fully automated billing with Pro Monthly subscriptions ($19/mo) and Founder Lifetime passes ($49 one-time).
-- **Universal Embeddability:** One-line script snippet (`<script src="/embed.js"></script>`) or responsive `<iframe>` compatible with Webflow, WordPress, Framer, Squarespace, Shopify, and custom React sites.
+- **Universal Embeddability:** One-line script snippet (`<script src="/embed.js"></script>`) or responsive `<iframe>` compatible with Webflow, WordPress, Framer, Squarespace, Shopify, and custom React sites with cross-domain auto-resizing.
 - **Automated Lead CRM & CSV Export:** Captures visitor contact details, input parameter snapshots, and calculated outcomes, with 1-click CSV download.
 
 ---
@@ -32,9 +33,10 @@
 | **Styling** | Tailwind CSS + Lucide Icons | Responsive modern SaaS aesthetic |
 | **ORM & DB** | Prisma + SQLite | Zero-cost serverless-ready local DB; instant migration to PostgreSQL/Supabase |
 | **Formula Engine** | Math.js AST parser | Client & server sandboxed reactive mathematical evaluation (prevents arbitrary JS execution) |
-| **AI Engine** | Google Gemini (Gemini 3.8 / 2.5 Flash) | Natural language to structured JSON calculator schemas with smart template fallbacks |
+| **AI Engine** | Google Gemini (Gemini Flash) | Natural language to structured JSON calculator schemas with smart template fallbacks |
 | **Payments** | Stripe Checkout & Webhooks | Automated global payments, subscriptions, and lifetime deals |
-| **Testing** | Vitest | Lightning-fast unit and API integration test suite |
+| **Programmatic SEO** | Dynamic Next.js Metadata & Schema.org | `CollectionPage`, `ItemList`, `WebApplication`, `BreadcrumbList`, and `FAQPage` JSON-LD |
+| **Testing** | Vitest | Lightning-fast unit and API integration test suite (32 tests passing) |
 
 ---
 
@@ -43,13 +45,16 @@
 ```text
 ├── Dockerfile                  # Multi-stage production container build
 ├── docker-compose.yml          # Production container orchestration
+├── docs/
+│   ├── LAUNCH_PACKAGE.md       # Multi-channel launch kits (Product Hunt, Show HN, Indie Hackers, Reddit, X)
+│   └── PRODUCTION_DEPLOYMENT.md# Production environment variables & deployment checklist
 ├── package.json                # Dependencies and scripts
 ├── prisma/
 │   ├── dev.db                  # Local SQLite database
 │   ├── schema.prisma           # User, Calculator, LeadSubmission, Subscription models
 │   └── seed.js                 # Demo data seed script
 ├── public/
-│   └── embed.js                # Lightweight universal embed snippet for client websites
+│   └── embed.js                # Lightweight universal embed snippet with iframe auto-resize
 ├── src/
 │   ├── app/
 │   │   ├── api/
@@ -60,11 +65,14 @@
 │   │   │   ├── health/         # System health check endpoint
 │   │   │   └── leads/          # Leads retrieval & RFC 4180 CSV export
 │   │   ├── builder/            # Visual Studio & AI generator studio
-│   │   ├── c/[slug]/           # Public standalone direct share page
+│   │   ├── c/[slug]/           # Public standalone direct share & programmatic SEO page
+│   │   ├── calculators/        # Curated programmatic SEO calculator directory
 │   │   ├── dashboard/          # Performance analytics & calculator management
 │   │   ├── embed/[slug]/       # Standalone embed widget page
 │   │   ├── leads/              # Captured leads CRM
 │   │   ├── pricing/            # Self-serve Stripe pricing plans
+│   │   ├── robots.ts           # Robots.txt handler with crawler directives
+│   │   ├── sitemap.ts          # Dynamic XML sitemap generator
 │   │   ├── globals.css         # Tailwind global styles
 │   │   ├── layout.tsx          # Root application layout & navigation
 │   │   └── page.tsx            # High-converting landing page & live demo
@@ -72,6 +80,8 @@
 │   │   ├── CalculatorRenderer.tsx  # Core reactive interactive calculator component
 │   │   ├── EmbedCodeModal.tsx      # Embed script & iframe modal
 │   │   └── Navbar.tsx              # Application header
+│   ├── data/
+│   │   └── seoCalculators.ts   # 12 high-intent programmatic calculator definitions
 │   ├── lib/
 │   │   ├── auth.ts             # User session resolver
 │   │   ├── formulaEngine.ts    # Sandboxed reactive formula evaluation & formatting
@@ -79,10 +89,13 @@
 │   │   └── prisma.ts           # Prisma client singleton
 │   └── types/
 │       └── calculator.ts       # TypeScript schemas and definitions
-└── tests/
-    ├── api.test.ts             # API integration tests (CRUD, embed, submit, CSV, billing)
-    ├── formulaEngine.test.ts   # Formula engine math & unit tests
-    └── gemini.test.ts          # AI generation & template fallback tests
+├── tests/
+│   ├── api.test.ts             # API integration tests (CRUD, embed, submit, CSV, billing)
+│   ├── formulaEngine.test.ts   # Formula engine math & unit tests
+│   ├── gemini.test.ts          # AI generation & template fallback tests
+│   ├── phase3Distribution.test.ts # SEO, sitemap, robots, and documentation tests
+│   └── seoCalculators.test.ts  # Validation of all 12 SEO calculator schemas & formulas
+└── vercel.json                 # Vercel deployment & permissive embed headers
 ```
 
 ---
@@ -172,22 +185,17 @@ Run the complete test suite:
 npm test
 ```
 
-### Test Coverage Highlights:
+### Test Coverage Highlights (32/32 Tests Passing):
 - **`formulaEngine.test.ts`**: Tests arithmetic expressions, percentage calculations, math functions (`min`, `max`, `round`, `sqrt`), division-by-zero resilience, currency/percentage formatting, and chained formula outputs.
 - **`gemini.test.ts`**: Tests AI schema generation, prompt normalization, and intelligent template fallback logic.
 - **`api.test.ts`**: Tests `/api/health`, `/api/ai/generate`, `/api/calculators` CRUD, `/api/embed/[slug]` delivery, `/api/embed/[slug]/submit` lead capture, `/api/leads?format=csv` export, and Stripe `/api/billing/checkout` & `/api/billing/webhook` processing.
+- **`phase3Distribution.test.ts`**: Verifies dynamic sitemap, robots indexing, launch assets, and Vercel cross-domain frame-ancestors headers.
+- **`seoCalculators.test.ts`**: Validates schema compliance, keyword targets, and formula calculation accuracy for all 12 programmatic calculators.
 
 ---
 
-## 8. Production Deployment
+## 8. Production Deployment & Launch Kit
 
-### Docker Deployment
-```bash
-docker-compose up --build -d
-```
-
-### Serverless Deployment (Vercel)
-1. Push repository to GitHub.
-2. Import project in Vercel.
-3. Configure environment variables (`DATABASE_URL`, `GEMINI_API_KEY`, `STRIPE_SECRET_KEY`).
-4. Deploy!
+- **Launch Package**: Ready-to-copy launch copy and distribution schedules are available in [`docs/LAUNCH_PACKAGE.md`](docs/LAUNCH_PACKAGE.md).
+- **Deployment Checklist**: Step-by-step setup for Vercel, Supabase, and Stripe is documented in [`docs/PRODUCTION_DEPLOYMENT.md`](docs/PRODUCTION_DEPLOYMENT.md).
+- **Vercel Config**: Pre-configured in [`vercel.json`](vercel.json) with optimized security and embed headers.
