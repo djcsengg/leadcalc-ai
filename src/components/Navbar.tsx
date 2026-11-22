@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Sparkles, LayoutDashboard, Users, CreditCard, PlusCircle } from "lucide-react";
+import { Sparkles, LayoutDashboard, Users, CreditCard, PlusCircle, Calculator } from "lucide-react";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -13,6 +13,7 @@ export function Navbar() {
   }
 
   const links = [
+    { href: "/calculators", label: "Calculators", icon: Calculator },
     { href: "/builder", label: "AI Generator", icon: Sparkles },
     { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { href: "/leads", label: "Leads", icon: Users },

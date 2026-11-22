@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getOrInitCalculator } from "@/lib/calculatorService";
 
 export async function POST(
   req: NextRequest,
@@ -18,12 +19,7 @@ export async function POST(
       );
     }
 
-    const calculator = await prisma.calculator.findUnique({
-      where: { slug },
-      include: {
-        user: true,
-      },
-    });
+    const calculator = await getOrInitCalculator(slug);
 
     if (!calculator) {
       return NextResponse.json(

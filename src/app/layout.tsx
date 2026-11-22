@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 
@@ -31,6 +32,12 @@ export default function RootLayout({
               <span>— Product #1 by Autonomous Technology Solutions (ATS)</span>
             </div>
             <div className="flex items-center space-x-6">
+              <Link href="/calculators" className="hover:text-slate-900 transition-colors">
+                Calculator Directory
+              </Link>
+              <Link href="/pricing" className="hover:text-slate-900 transition-colors">
+                Pricing
+              </Link>
               <span>Zero-cost Serverless Stack</span>
               <span>Stripe Global Payments</span>
               <span>Gemini AI Engine</span>

@@ -27,6 +27,8 @@
       iframe.style.overflow = "hidden";
       iframe.setAttribute("scrolling", "no");
       iframe.setAttribute("title", "LeadCalc AI Widget");
+      iframe.setAttribute("loading", "lazy");
+      iframe.setAttribute("allow", "clipboard-write");
 
       // Auto-resize listener
       window.addEventListener("message", function (event) {

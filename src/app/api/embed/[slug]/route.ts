@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getOrInitCalculator } from "@/lib/calculatorService";
 
 export async function GET(
   _req: NextRequest,
@@ -8,16 +9,7 @@ export async function GET(
   try {
     const { slug } = params;
 
-    const calculator = await prisma.calculator.findUnique({
-      where: { slug },
-      include: {
-        user: {
-          select: {
-            planTier: true,
-          },
-        },
-      },
-    });
+    const calculator = await getOrInitCalculator(slug);
 
     if (!calculator || !calculator.isPublished) {
       return NextResponse.json(

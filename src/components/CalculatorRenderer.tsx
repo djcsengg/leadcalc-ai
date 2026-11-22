@@ -417,14 +417,24 @@ export function CalculatorRenderer({
           {showBadge && (
             <div className="mt-8 border-t border-slate-100 pt-4 text-center">
               <a
-                href={process.env.NEXT_PUBLIC_APP_URL || "https://leadcalc.ai"}
+                href={`${
+                  process.env.NEXT_PUBLIC_APP_URL || "https://leadcalc.ai"
+                }/?utm_source=calculator_embed&utm_medium=viral_badge&utm_campaign=powered_by&ref=${encodeURIComponent(
+                  slug || "widget"
+                )}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-1.5 text-xs font-medium text-slate-500 hover:text-brand-600 transition-colors"
+                className="group inline-flex items-center space-x-1.5 rounded-full border border-slate-200/80 bg-white/90 px-3.5 py-1.5 text-xs font-medium text-slate-500 shadow-xs hover:border-brand-200 hover:bg-brand-50/70 hover:text-brand-600 transition-all"
               >
+                <span className="text-amber-500 font-bold">⚡</span>
                 <span>Powered by</span>
-                <span className="font-bold text-slate-700 hover:text-brand-600">LeadCalc AI</span>
-                <ExternalLink className="h-3 w-3 text-slate-400" />
+                <span className="font-bold text-slate-700 group-hover:text-brand-600 transition-colors">
+                  LeadCalc AI
+                </span>
+                <span className="hidden sm:inline text-slate-400 group-hover:text-brand-500">
+                  — Build yours free
+                </span>
+                <ExternalLink className="h-3 w-3 text-slate-400 group-hover:text-brand-500 transition-colors" />
               </a>
             </div>
           )}
