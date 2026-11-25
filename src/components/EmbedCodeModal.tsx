@@ -26,7 +26,7 @@ export function EmbedCodeModal({
   const iframeUrl = `${appUrl}/embed/${slug}`;
 
   const scriptSnippet = `<div id="leadcalc-embed" data-calc="${slug}">\n  <a href="${appUrl}/?utm_source=embed_snippet&utm_medium=referral&utm_campaign=viral_loop&ref=${slug}" target="_blank" rel="noopener" style="font-family:sans-serif;font-size:12px;color:#64748b;text-decoration:none;">⚡ Powered by LeadCalc AI</a>\n</div>\n<script src="${appUrl}/embed.js" async></script>`;
-  const iframeSnippet = `<iframe\n  src="${iframeUrl}"\n  width="100%"\n  height="650"\n  frameborder="0"\n  style="border:none; border-radius: 12px; overflow: hidden;"\n  title="${title}"\n></iframe>\n<p style="text-align:center; margin-top:4px; font-family:sans-serif; font-size:11px; color:#64748b;">\n  <a href="${appUrl}/?utm_source=iframe_snippet&utm_medium=referral&utm_campaign=viral_loop&ref=${slug}" target="_blank" rel="noopener" style="color:#64748b; text-decoration:none;">⚡ Powered by LeadCalc AI</a>\n</p>`;
+  const iframeSnippet = `<iframe\n  src="${iframeUrl}"\n  width="100%"\n  height="650"\n  frameborder="0"\n  sandbox="allow-scripts allow-forms allow-same-origin allow-popups"\n  loading="lazy"\n  style="border:none; border-radius: 12px; overflow: hidden;"\n  title="${title}"\n></iframe>\n<p style="text-align:center; margin-top:4px; font-family:sans-serif; font-size:11px; color:#64748b;">\n  <a href="${appUrl}/?utm_source=iframe_snippet&utm_medium=referral&utm_campaign=viral_loop&ref=${slug}" target="_blank" rel="noopener" style="color:#64748b; text-decoration:none;">⚡ Powered by LeadCalc AI</a>\n</p>`;
 
   const currentSnippet =
     activeTab === "script"

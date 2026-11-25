@@ -29,6 +29,7 @@
       iframe.setAttribute("title", "LeadCalc AI Widget");
       iframe.setAttribute("loading", "lazy");
       iframe.setAttribute("allow", "clipboard-write");
+      iframe.setAttribute("sandbox", "allow-scripts allow-forms allow-same-origin allow-popups");
 
       // Auto-resize listener
       window.addEventListener("message", function (event) {

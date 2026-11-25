@@ -67,15 +67,15 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check plan tier limits: Free users are limited to 1 calculator
+    // Check plan tier limits: Free tier includes up to 3 calculators
     if (user.planTier === "free") {
       const count = await prisma.calculator.count({
         where: { userId: user.id },
       });
-      if (count >= 1) {
+      if (count >= 3) {
         return NextResponse.json(
           {
-            error: "Free tier allows 1 calculator. Please upgrade to Pro for unlimited calculators.",
+            error: "Free tier allows up to 3 calculators. Please upgrade to Pro for unlimited calculators.",
             upgradeRequired: true,
           },
           { status: 403 }

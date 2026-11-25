@@ -21,6 +21,38 @@ const safeMathScope = {
   log: Math.log,
 };
 
+// Disallowed tokens to prevent prototype pollution or code execution
+const FORBIDDEN_TOKENS = /\b(constructor|__proto__|prototype|import|eval|window|document|process|global|require|Function|Reflect|Proxy)\b/i;
+
+/**
+ * Validates and sanitizes a math formula string before compilation.
+ * Returns null if the formula violates safety policies.
+ */
+export function sanitizeFormula(formula: string): string | null {
+  if (!formula || typeof formula !== "string") {
+    return null;
+  }
+
+  const trimmed = formula.trim();
+
+  // Reject excessively long formulas to prevent ReDoS / CPU exhaustion
+  if (trimmed.length > 500) {
+    return null;
+  }
+
+  // Reject forbidden keywords and prototype access
+  if (FORBIDDEN_TOKENS.test(trimmed)) {
+    return null;
+  }
+
+  // Reject JavaScript code structures: brackets, braces, semicolons, backticks, quotes
+  if (/[[\]{};`"'\\$]/.test(trimmed)) {
+    return null;
+  }
+
+  return trimmed;
+}
+
 /**
  * Safely evaluates a math formula string using a scope of variables.
  */
@@ -28,24 +60,28 @@ export function evaluateFormula(
   formula: string,
   scope: Record<string, any>
 ): number {
-  if (!formula || typeof formula !== "string") {
+  const sanitized = sanitizeFormula(formula);
+  if (!sanitized) {
     return 0;
   }
 
-  // Pre-process formula: normalize multiplication, sanitize
-  const cleanFormula = formula
-    .trim()
-    .replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\s*%/g, "($1 / 100)") // handle var%
-    .replace(/(\d+)%/g, "($1 / 100)"); // handle 15%
+  // Pre-process formula: normalize percentages (e.g., "rate%" -> "(rate / 100)")
+  const cleanFormula = sanitized
+    .replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\s*%/g, "($1 / 100)")
+    .replace(/(\d+)%/g, "($1 / 100)");
 
   try {
     // Merge scope with safe math functions
-    const evalScope: Record<string, any> = { ...safeMathScope, ...scope };
+    const evalScope: Record<string, any> = { ...safeMathScope };
 
-    // Convert string numbers in scope to numbers
-    for (const key of Object.keys(evalScope)) {
-      if (typeof evalScope[key] === "string" && !isNaN(Number(evalScope[key]))) {
-        evalScope[key] = Number(evalScope[key]);
+    // Convert string numbers in scope to numbers and exclude forbidden keys
+    for (const key of Object.keys(scope || {})) {
+      if (FORBIDDEN_TOKENS.test(key)) continue;
+      const val = scope[key];
+      if (typeof val === "string" && !isNaN(Number(val))) {
+        evalScope[key] = Number(val);
+      } else if (typeof val === "number" && isFinite(val)) {
+        evalScope[key] = val;
       }
     }
 
@@ -57,8 +93,8 @@ export function evaluateFormula(
     }
 
     return result;
-  } catch (err) {
-    console.warn(`Formula evaluation error for "${formula}":`, err);
+  } catch {
+    // Gracefully handle math syntax errors, division by zero, or undefined symbols
     return 0;
   }
 }

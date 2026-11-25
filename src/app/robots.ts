@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/calculators", "/c/*", "/builder", "/pricing"],
+        allow: ["/", "/calculators", "/c/*", "/builder", "/pricing", "/llms.txt"],
         disallow: [
           "/api/*",
           "/dashboard",
@@ -19,7 +19,7 @@ export default function robots(): MetadataRoute.Robots {
       },
       {
         userAgent: "GPTBot",
-        allow: ["/", "/calculators", "/c/*"],
+        allow: ["/", "/calculators", "/c/*", "/llms.txt"],
         disallow: ["/api/*", "/dashboard", "/leads"],
       },
     ],

@@ -58,4 +58,26 @@ describe("Phase 3: Launch, SEO & Traffic Distribution", () => {
     const embedHeader = vercelConfig.headers.find((h: any) => h.source.includes("embed"));
     expect(embedHeader).toBeDefined();
   });
+
+  it("verifies /llms.txt exists and provides AI discovery context", () => {
+    const llmsFile = path.resolve(__dirname, "../public/llms.txt");
+    expect(fs.existsSync(llmsFile)).toBe(true);
+    const content = fs.readFileSync(llmsFile, "utf-8");
+    expect(content).toContain("LeadCalc AI");
+    expect(content).toContain("Curated Programmatic Calculators Directory");
+    expect(content).toContain("Dual Deployment Passive Revenue Model");
+    expect(content).toContain("GET /embed/[slug]");
+    expect(content).toContain("POST /api/ai/generate");
+  });
+
+  it("verifies ENVIRONMENT_CHECKLIST.md exists with all required production keys", () => {
+    const checklistFile = path.resolve(__dirname, "../docs/ENVIRONMENT_CHECKLIST.md");
+    expect(fs.existsSync(checklistFile)).toBe(true);
+    const content = fs.readFileSync(checklistFile, "utf-8");
+    expect(content).toContain("DATABASE_URL");
+    expect(content).toContain("GEMINI_API_KEY");
+    expect(content).toContain("STRIPE_SECRET_KEY");
+    expect(content).toContain("Rate Limiting");
+    expect(content).toContain("Formula Sandbox");
+  });
 });

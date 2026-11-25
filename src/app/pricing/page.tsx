@@ -64,11 +64,11 @@ export default function PricingPage() {
             <ul className="mt-8 space-y-3.5 text-xs text-slate-600">
               <li className="flex items-center space-x-2.5">
                 <Check className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                <span>1 Active Calculator</span>
+                <span>3 Active Calculators</span>
               </li>
               <li className="flex items-center space-x-2.5">
                 <Check className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                <span>Up to 25 Captured Leads / month</span>
+                <span>Up to 100 Captured Leads / month</span>
               </li>
               <li className="flex items-center space-x-2.5">
                 <Check className="h-4 w-4 text-emerald-500 flex-shrink-0" />
@@ -159,6 +159,7 @@ export default function PricingPage() {
 
             <div className="mt-6 flex items-baseline">
               <span className="text-4xl font-extrabold text-slate-900">$49</span>
+              <span className="text-sm font-semibold text-purple-700 ml-2">(₹2,499)</span>
               <span className="text-xs text-slate-500 ml-1">one-time payment</span>
             </div>
 
@@ -173,11 +174,11 @@ export default function PricingPage() {
               </li>
               <li className="flex items-center space-x-2.5">
                 <Check className="h-4 w-4 text-purple-600 flex-shrink-0" />
-                <span>All Future Product Updates Included</span>
+                <span>Full White-Labeling & Custom Domain Ready</span>
               </li>
               <li className="flex items-center space-x-2.5">
                 <Check className="h-4 w-4 text-purple-600 flex-shrink-0" />
-                <span>White-Label Badge Removal</span>
+                <span>All Future Product Updates Included</span>
               </li>
               <li className="flex items-center space-x-2.5">
                 <Check className="h-4 w-4 text-purple-600 flex-shrink-0" />
@@ -191,7 +192,7 @@ export default function PricingPage() {
             disabled={loadingPlan === "founder"}
             className="mt-8 w-full inline-flex items-center justify-center space-x-2 rounded-xl bg-purple-600 py-3 text-xs font-bold text-white shadow-md hover:bg-purple-700 transition-colors disabled:opacity-50"
           >
-            <span>{loadingPlan === "founder" ? "Redirecting..." : "Claim Lifetime Pass ($49)"}</span>
+            <span>{loadingPlan === "founder" ? "Redirecting..." : "Claim Lifetime Pass ($49 / ₹2,499)"}</span>
             <Sparkles className="h-4 w-4" />
           </button>
         </div>

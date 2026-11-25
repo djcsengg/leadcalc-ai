@@ -14,4 +14,5 @@ export const prisma =
     log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
   });
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+// Retain instance across hot reloads and serverless container reuse to prevent connection exhaustion
+globalForPrisma.prisma = prisma;

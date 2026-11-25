@@ -100,4 +100,23 @@ describe("Formula Engine", () => {
     // String number in scope should be converted to numeric during evaluation
     expect(evaluateFormula("price * qty", { price: "25.5", qty: "4" })).toBe(102);
   });
+
+  it("sanitizes formulas and blocks code injection and prototype pollution", () => {
+    // Blocks constructor / prototype access
+    expect(evaluateFormula("constructor.constructor('return 1')()", {})).toBe(0);
+    expect(evaluateFormula("__proto__.polluted = 1", {})).toBe(0);
+    expect(evaluateFormula("prototype.evil", {})).toBe(0);
+
+    // Blocks JavaScript statements and structures
+    expect(evaluateFormula("1 + 1; console.log('hacked')", {})).toBe(0);
+    expect(evaluateFormula("[1, 2, 3].reduce((a,b)=>a+b)", {})).toBe(0);
+    expect(evaluateFormula("{ a: 10 }.a", {})).toBe(0);
+
+    // Blocks overly long formulas
+    const hugeFormula = "1 + " + "1 + ".repeat(200) + "1";
+    expect(evaluateFormula(hugeFormula, {})).toBe(0);
+
+    // Valid mathematical expressions continue to work
+    expect(evaluateFormula("(a * b) / (c + 1)", { a: 10, b: 5, c: 1 })).toBe(25);
+  });
 });

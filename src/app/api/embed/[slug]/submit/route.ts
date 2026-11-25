@@ -2,6 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getOrInitCalculator } from "@/lib/calculatorService";
 
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
+};
+
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      ...corsHeaders,
+      "Access-Control-Max-Age": "86400",
+    },
+  });
+}
+
 export async function POST(
   req: NextRequest,
   { params }: { params: { slug: string } }
@@ -15,7 +31,7 @@ export async function POST(
     if (!email || typeof email !== "string" || !email.includes("@")) {
       return NextResponse.json(
         { error: "A valid email address is required" },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -24,11 +40,11 @@ export async function POST(
     if (!calculator) {
       return NextResponse.json(
         { error: "Calculator not found" },
-        { status: 404 }
+        { status: 404, headers: corsHeaders }
       );
     }
 
-    // Check free tier 25 leads/month limit
+    // Check free tier 100 leads/month limit
     if (calculator.user.planTier === "free") {
       const now = new Date();
       const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -40,13 +56,13 @@ export async function POST(
         },
       });
 
-      if (monthlyLeadsCount >= 25) {
+      if (monthlyLeadsCount >= 100) {
         return NextResponse.json(
           {
-            error: "This calculator has reached its free tier monthly lead limit.",
+            error: "This calculator has reached its free tier monthly lead limit (100 leads). Please upgrade to Pro for unlimited leads.",
             limitReached: true,
           },
-          { status: 429 }
+          { status: 429, headers: corsHeaders }
         );
       }
     }
@@ -68,13 +84,13 @@ export async function POST(
         message: "Lead recorded successfully",
         leadId: lead.id,
       },
-      { status: 201 }
+      { status: 201, headers: corsHeaders }
     );
   } catch (error) {
     console.error("Error in POST /api/embed/[slug]/submit:", error);
     return NextResponse.json(
       { error: "Failed to record lead submission" },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }

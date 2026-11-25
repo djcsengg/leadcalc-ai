@@ -1,0 +1,52 @@
+# LeadCalc AI — The AI-Powered Interactive Calculator & Viral Lead Magnet Platform
+
+> Transform complex financial models, pricing estimators, and ROI equations into interactive, viral lead capture widgets in 30 seconds.
+
+## Overview
+LeadCalc AI enables creators, founders, agencies, and marketers to generate interactive, embeddable business and financial calculators using prompt-driven AI (Gemini 3.8 Flash). Calculations execute 100% client-side with zero backend compute overhead via a sandboxed mathjs formula engine. Every calculator acts as a viral distribution loop with seamless lead gating, CSV export, and 1-line script or sandboxed iframe embedding.
+
+## Key Capabilities
+- **Instant AI Calculator Creation**: Describe any calculator in plain English (e.g., "SaaS Churn Rate Calculator", "Solar Panel ROI Estimator"), and LeadCalc AI outputs a complete reactive schema with inputs, formulas, and formatted results.
+- **Client-Side Real-Time Calculation Preview**: Users can test, tweak, and preview calculations directly in the builder without an account or signup.
+- **Zero-Overhead Embeds**: Embed widgets via a universal responsive `<script src="https://leadcalc.ai/embed.js">` or sandboxed `<iframe>` on Webflow, WordPress, Notion, Squarespace, Framer, Shopify, and custom React sites.
+- **Dual Deployment Passive Revenue Model**:
+  - **Free Tier**: 3 active calculators, 100 captured leads/month, instant AI generation, universal script & iframe embeds.
+  - **Pro Subscription ($19/mo)**: Unlimited active calculators, unlimited leads, custom brand styling, 1-click CSV exports, badge removal.
+  - **Founder Lifetime Deal ($49 / ₹2,499 one-time)**: Lifetime access to all Pro features, unlimited calculators, white-labeling, direct roadmap access.
+
+## Curated Programmatic Calculators Directory (/calculators)
+LeadCalc AI maintains a high-intent directory of SEO-optimized calculators targeting high-volume business search queries:
+- **Solar Panel Payback & ROI Estimator**: `/c/solar-roi` — Calculate break-even years, 25-year net savings, and monthly electric bill reduction.
+- **SaaS Customer Churn & LTV Calculator**: `/c/saas-churn-rate` — Measure revenue churn, customer lifetime value, and net ARR impact.
+- **Freelance Hourly Rate & Target Income Calculator**: `/c/freelance-hourly-rate` — Compute required hourly rate factoring non-billable hours, taxes, and expenses.
+- **Mortgage Payment & Amortization Estimator**: `/c/mortgage-payment-calculator` — Estimate monthly P&I, total interest, and amortized repayment schedules.
+- **Agency Client Retainer ROI Calculator**: `/c/agency-retainer-roi` — Prove agency return on investment and cost per acquired customer.
+- **Ecommerce Customer Acquisition Cost (CAC) vs LTV**: `/c/ecommerce-cac-ltv` — Analyze unit economics and payback periods for online retail.
+- **Commercial Real Estate Cap Rate Estimator**: `/c/commercial-real-estate-cap-rate` — Compute Net Operating Income (NOI) and capitalization rates.
+- **Employee Turnover Cost Estimator**: `/c/employee-turnover-cost` — Quantify hiring, onboarding, and lost productivity costs.
+- **Cloud Infrastructure AWS/GCP Cost Optimizer**: `/c/cloud-infrastructure-cost` — Forecast server, storage, and egress savings.
+- **Course & Digital Product Launch Revenue Model**: `/c/digital-course-revenue` — Model audience conversion funnels and launch projections.
+- **Car Loan & Lease Comparison Calculator**: `/c/car-loan-vs-lease` — Compare total cost of vehicle ownership between leasing and financing.
+- **Startup Runway & Burn Rate Estimator**: `/c/startup-burn-rate-runway` — Calculate zero-cash dates, net burn, and funding milestone buffers.
+
+## API & Embed Reference
+- **Public Interactive Embed Route**: `GET /embed/[slug]` — Responsive embeddable view with `Content-Security-Policy: frame-ancestors *` and clean iframe sandboxing.
+- **Public Embed API Route**: `GET /api/embed/[slug]` — Returns calculator metadata, schema, and theme styling with permissive CORS.
+- **Lead Submission Endpoint**: `POST /api/embed/[slug]/submit` — Records captured leads with input and output snapshots.
+- **AI Schema Generator**: `POST /api/ai/generate` — Rate-limited endpoint for prompt-to-calculator generation.
+- **Health Check**: `GET /api/health` — Verifies edge infrastructure and database status.
+
+## Technology Stack
+- **Framework**: Next.js 14 App Router, TypeScript, Tailwind CSS, Lucide Icons
+- **Formula Engine**: mathjs with strict token sanitization and client-side execution
+- **Database**: PostgreSQL (Prisma ORM with connection pooling)
+- **Deployment**: Vercel Serverless / Cloudflare Pages Edge
+- **Payments**: Stripe Checkout & Webhook Integration
+
+## Links & Discovery
+- Website: https://leadcalc.ai
+- Programmatic Directory: https://leadcalc.ai/calculators
+- Interactive Builder: https://leadcalc.ai/builder
+- Pricing & LTD: https://leadcalc.ai/pricing
+- Sitemap: https://leadcalc.ai/sitemap.xml
+- Robots: https://leadcalc.ai/robots.txt

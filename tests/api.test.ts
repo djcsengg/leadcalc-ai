@@ -3,12 +3,13 @@ import { NextRequest } from "next/server";
 import { GET as healthGet } from "../src/app/api/health/route";
 import { POST as aiGeneratePost } from "../src/app/api/ai/generate/route";
 import { GET as calculatorsGet, POST as calculatorsPost } from "../src/app/api/calculators/route";
-import { GET as embedGet } from "../src/app/api/embed/[slug]/route";
-import { POST as embedSubmitPost } from "../src/app/api/embed/[slug]/submit/route";
+import { GET as embedGet, OPTIONS as embedOptions } from "../src/app/api/embed/[slug]/route";
+import { POST as embedSubmitPost, OPTIONS as embedSubmitOptions } from "../src/app/api/embed/[slug]/submit/route";
 import { GET as leadsGet } from "../src/app/api/leads/route";
 import { POST as checkoutPost } from "../src/app/api/billing/checkout/route";
 import { POST as webhookPost } from "../src/app/api/billing/webhook/route";
 import { prisma } from "../src/lib/prisma";
+import { resetRateLimitStore } from "../src/lib/rateLimit";
 
 describe("API Route Integration Tests", () => {
   let createdSlug = "";
@@ -195,5 +196,51 @@ describe("API Route Integration Tests", () => {
 
     const updatedUser = await prisma.user.findUnique({ where: { email: "demo@leadcalc.ai" } });
     expect(updatedUser?.planTier).toBe("founder");
+  });
+
+  it("OPTIONS /api/embed/[slug] returns 204 with CORS preflight headers", async () => {
+    const res = await embedOptions();
+    expect(res.status).toBe(204);
+    expect(res.headers.get("Access-Control-Allow-Origin")).toBe("*");
+    expect(res.headers.get("Access-Control-Allow-Methods")).toContain("GET");
+  });
+
+  it("OPTIONS /api/embed/[slug]/submit returns 204 with CORS preflight headers", async () => {
+    const res = await embedSubmitOptions();
+    expect(res.status).toBe(204);
+    expect(res.headers.get("Access-Control-Allow-Origin")).toBe("*");
+    expect(res.headers.get("Access-Control-Allow-Methods")).toContain("POST");
+  });
+
+  it("POST /api/ai/generate enforces rate limiting after exceeding threshold", async () => {
+    resetRateLimitStore();
+    const testIp = "192.168.1.100";
+
+    // 10 requests tracked against the sliding window limit
+    for (let i = 0; i < 10; i++) {
+      const req = new NextRequest("http://localhost:3000/api/ai/generate", {
+        method: "POST",
+        headers: { "x-forwarded-for": testIp },
+        body: JSON.stringify({ prompt: "" }),
+      });
+      const res = await aiGeneratePost(req);
+      expect(res.status).toBe(400);
+      expect(res.headers.get("X-RateLimit-Limit")).toBe("10");
+      expect(Number(res.headers.get("X-RateLimit-Remaining"))).toBe(9 - i);
+    }
+
+    // 11th request must be rate limited with 429
+    const blockedReq = new NextRequest("http://localhost:3000/api/ai/generate", {
+      method: "POST",
+      headers: { "x-forwarded-for": testIp },
+      body: JSON.stringify({ prompt: "Excess prompt" }),
+    });
+    const blockedRes = await aiGeneratePost(blockedReq);
+    expect(blockedRes.status).toBe(429);
+    expect(blockedRes.headers.get("Retry-After")).toBeTruthy();
+    const data = await blockedRes.json();
+    expect(data.error).toContain("Rate limit exceeded");
+
+    resetRateLimitStore();
   });
 });
